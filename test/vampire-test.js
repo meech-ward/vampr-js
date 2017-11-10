@@ -1,7 +1,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const Vampire = require('./vampire.js');
+const Vampire = require('../vampire.js');
 
 describe("vampire", function() {
 
