@@ -23,33 +23,33 @@ describe("Vampire", function() {
       });
 
       it("should be the offspring of that vampire", () => {
-        expect(rootVampire.offspring[0]).to.equal(offspring1);
-        expect(rootVampire.offspring[1]).to.equal(offspring2);
+        expect(rootVampire.offspring[0]).to.equal(offspring1, "vampire has not been added as an offspring");
+        expect(rootVampire.offspring[1]).to.equal(offspring2, "vampire has not been added as an offspring");
       });
       
-      it("should have that vampire as it's creator", () => {
-        expect(offspring1.creator).to.equal(rootVampire);
-        expect(offspring2.creator).to.equal(rootVampire);
+      it("should have that vampire as there creator", () => {
+        expect(offspring1.creator).to.equal(rootVampire, "vampire does not have the correct creator");
+        expect(offspring2.creator).to.equal(rootVampire, "vampire does not have the correct creator");
       });
     });
 
   });
 
-  describe("numberOfOffspring", () => {
+  describe("#numberOfOffspring", () => {
 
-    it("should get the correct number of offspring", () => {
-      expect(rootVampire.numberOfOffspring).to.equal(0);
+    it("should return the correct number of offspring", () => {
+      expect(rootVampire.numberOfOffspring).to.equal(0, "Incorrect number of offspring");
       rootVampire.addOffspring(new Vampire());
-      expect(rootVampire.numberOfOffspring).to.equal(1);
-      rootVampire.addOffspring(new Vampire());
-      rootVampire.addOffspring(new Vampire());
+      expect(rootVampire.numberOfOffspring).to.equal(1, "Incorrect number of offspring");
       rootVampire.addOffspring(new Vampire());
       rootVampire.addOffspring(new Vampire());
-      expect(rootVampire.numberOfOffspring).to.equal(5);
+      rootVampire.addOffspring(new Vampire());
+      rootVampire.addOffspring(new Vampire());
+      expect(rootVampire.numberOfOffspring).to.equal(5, "Incorrect number of offspring");
     });
   });
 
-  describe("numberOfVampiresFromOriginal", () => {
+  describe("#numberOfVampiresFromOriginal", () => {
 
     let offspring1, offspring2, offspring3, offspring4;
     before(() => {
@@ -64,24 +64,24 @@ describe("Vampire", function() {
       offspring3.addOffspring(offspring4);
     })
     
-    it("root should be 0 from original", () => {
+    it("the root vampire should be 0 from original", () => {
       expect(rootVampire.numberOfVampiresFromOriginal).to.equal(0);
     });
 
-    it("offspring 1 should be 1 from original", () => {
+    it("offspring of the root vampire should be 1 from original", () => {
       expect(offspring1.numberOfVampiresFromOriginal).to.equal(1);
     });
 
-    it("offspring 2 should be 2 from original", () => {
+    it("offspring at level 2 should be 2 from original", () => {
       expect(offspring2.numberOfVampiresFromOriginal).to.equal(2);
     });
 
-    it("offspring 4 should be 4 from original", () => {
+    it("offspring at level 4 should be 4 from original", () => {
       expect(offspring4.numberOfVampiresFromOriginal).to.equal(4);
     });
   });
 
-  describe("moreSeniorVampire", () => {
+  describe("#moreSeniorVampire", () => {
 
     let offspring1, offspring2, offspring3, offspring4;
     beforeEach(() => {
@@ -96,26 +96,37 @@ describe("Vampire", function() {
       offspring3.addOffspring(offspring4);
     });
 
-    it("original should be more senior", () => {
-      expect(rootVampire.isMoreSeniorThan(offspring1)).to.equal(true);
-      expect(rootVampire.isMoreSeniorThan(offspring2)).to.equal(true);
-      expect(rootVampire.isMoreSeniorThan(offspring3)).to.equal(true);
-      expect(rootVampire.isMoreSeniorThan(offspring4)).to.equal(true);
-
-      expect(offspring1.isMoreSeniorThan(rootVampire)).to.equal(false);
-      expect(offspring2.isMoreSeniorThan(rootVampire)).to.equal(false);
-      expect(offspring3.isMoreSeniorThan(rootVampire)).to.equal(false);
-      expect(offspring4.isMoreSeniorThan(rootVampire)).to.equal(false);
+    context("when comparing the original vampire to any other vampire", function() {
+      it("original vampire should be more senior", () => {
+        expect(rootVampire.isMoreSeniorThan(offspring1)).to.equal(true);
+        expect(rootVampire.isMoreSeniorThan(offspring2)).to.equal(true);
+        expect(rootVampire.isMoreSeniorThan(offspring3)).to.equal(true);
+        expect(rootVampire.isMoreSeniorThan(offspring4)).to.equal(true);
+  
+        expect(offspring1.isMoreSeniorThan(rootVampire)).to.equal(false);
+        expect(offspring2.isMoreSeniorThan(rootVampire)).to.equal(false);
+        expect(offspring3.isMoreSeniorThan(rootVampire)).to.equal(false);
+        expect(offspring4.isMoreSeniorThan(rootVampire)).to.equal(false);
+      });
+    });
+    
+    context("when comparing two vampires at different levels", function() {
+      it("the vampire closer to the original should be more senior", () => {
+        expect(offspring3.isMoreSeniorThan(offspring4)).to.equal(true);
+        expect(offspring4.isMoreSeniorThan(offspring3)).to.equal(false);
+      });
     });
 
-    it("offspring 3 should be more senior", () => {
-      expect(offspring3.isMoreSeniorThan(offspring4)).to.equal(true);
-      expect(offspring4.isMoreSeniorThan(offspring3)).to.equal(false);
+    context("when comparing two vampires at the same level", function() {
+      it("neither vampire is more senior", () => {
+        expect(offspring2.isMoreSeniorThan(offspring3)).to.equal(false);
+        expect(offspring3.isMoreSeniorThan(offspring2)).to.equal(false);
+      });
     });
 
   });
 
-  describe("closestCommonAncestor", function() {
+  describe("#closestCommonAncestor", function() {
 
     let offspring1, offspring2, offspring3, offspring4, offspring5, offspring6, offspring7, offspring8;
     beforeEach(() => {
